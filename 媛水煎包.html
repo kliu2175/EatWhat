@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>媛水煎包點餐</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .item-info {
+            flex-grow: 1;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .total {
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<h1>媛水煎包點餐</h1>
+<div id="menu"></div>
+<div class="total" id="total">總計: $0</div>
+
+<script>
+    const menuItems = [
+        { name: '鮮肉煎包', price: 15 },
+        { name: '酸菜煎包', price: 15 },
+        { name: '高麗菜煎包', price: 15 },
+        { name: '奶茶', price: 20 },
+        { name: '紅茶', price: 15 },
+    ];
+
+    const menu = document.getElementById('menu');
+    const totalElement = document.getElementById('total');
+    const orders = new Map();
+
+    function updateTotal() {
+        let total = 0;
+        orders.forEach((quantity, item) => {
+            total += item.price * quantity;
+        });
+        totalElement.textContent = `總計: $${total}`;
+    }
+
+    function createMenuItem(item) {
+        const div = document.createElement('div');
+        div.className = 'menu-item';
+
+        const itemInfo = document.createElement('div');
+        itemInfo.className = 'item-info';
+        itemInfo.innerHTML = `
+                <div>${item.name}</div>
+                <div>$${item.price}</div>
+            `;
+
+        const controls = document.createElement('div');
+        controls.className = 'quantity-controls';
+
+        const minusButton = document.createElement('button');
+        minusButton.textContent = '-';
+        minusButton.onclick = () => {
+            const currentQuantity = orders.get(item) || 0;
+            if (currentQuantity > 0) {
+                orders.set(item, currentQuantity - 1);
+                quantityDisplay.textContent = currentQuantity - 1;
+                updateTotal();
+            }
+            minusButton.disabled = (currentQuantity - 1) <= 0;
+        };
+        minusButton.disabled = true;
+
+        const quantityDisplay = document.createElement('span');
+        quantityDisplay.textContent = '0';
+
+        const plusButton = document.createElement('button');
+        plusButton.textContent = '+';
+        plusButton.onclick = () => {
+            const currentQuantity = orders.get(item) || 0;
+            orders.set(item, currentQuantity + 1);
+            quantityDisplay.textContent = currentQuantity + 1;
+            minusButton.disabled = false;
+            updateTotal();
+        };
+
+        controls.appendChild(minusButton);
+        controls.appendChild(quantityDisplay);
+        controls.appendChild(plusButton);
+
+        div.appendChild(itemInfo);
+        div.appendChild(controls);
+        return div;
+    }
+
+    menuItems.forEach(item => {
+        menu.appendChild(createMenuItem(item));
+    });
+</script>
+</body>
+</html>
