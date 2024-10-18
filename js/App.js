@@ -88,7 +88,7 @@ function selectRandomShop() {
     const randomIndex = Math.floor(Math.random() * drinkShops.length);
     const selectedShop = drinkShops[randomIndex];
 
-    document.getElementById('result').textContent = `今天就去 ${selectedShop} 吧！`;
+    document.getElementById('result').textContent = `吃 ${selectedShop} 吧！`;
     document.getElementById('menuImage').src = menuImages[selectedShop];
     document.getElementById('menuImage').style.display = 'block';
 }
