@@ -95,7 +95,7 @@ function selectRandomShop() {
 
 // Order class
 class Order {
-    constructor(name, item, addition, size, sugar, ice, price) {
+    constructor(name, item, size, salinity, note, price) {
         this.name = name;
         this.item = item;
         this.size = size;
@@ -152,5 +152,11 @@ function updateOrderTable() {
         totalPrice += parseFloat(order.price || 0);
     });
 
-    totalPriceElement.textContent = totalPrice;
+    totalPriceElement.textContent = totalPrice.toFixed(2);
 }
+
+// 初始化表單的下拉選單
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('size').value = '正常';
+    document.getElementById('salinity').value = '正常';
+});
